@@ -15,10 +15,6 @@ from data.data_utils.load_problems import load_problems
 from data.data_utils.load_prompts import get_prompt_examples
 
 
-# TODO: Load the problem texts from files
-problem_texts = [
-    r"Prove that $\sqrt{2}$ is irrational, i.e., $\not\exists p, q \in \mathbb{Z}$ s.t. $\frac{p}{q} = \sqrt{2}$."
-]
 problem_topics = ["Algebra", "Group Theory", "Number Theory", "Probability Theory", "Topology", "Linear Algebra"]
 problems_per_topic = {"Algebra": np.arange(10),
                       "Group Theory": np.arange(10, 20), 
@@ -57,11 +53,7 @@ assert len(problem_texts) == 60, len(problem_texts)
 prompts = get_prompt_examples("./data/prompts/")
 assert len(prompts) == 24, len(prompts)
 
-# current_problem_text = r"Let $\left({R, +, \odot}\right)$ be a ringoid such that $\left({R, \odot}\right)$ is a commutative semigroup. Let $n \in \mathcal{Z}: n \geq 2$. Then:"
 debug_solution = r"$\pi$\'s value is roughtly $\frac{22}{7}$"
-
-# global next_button
-# next_button = gr.Button("Go to the next problem", visible=False)
 
 debug_model = "debug_model"
 
@@ -88,7 +80,6 @@ if not os.path.exists(main_saving_path): os.makedirs(main_saving_path)
 
 debug_problem_index = 0
 
-# user_save_dir = os.path.join(main_saving_path, current_uid)
 
 def pipeline_for_model(
     model: str = debug_model,
@@ -100,11 +91,7 @@ def pipeline_for_model(
     global problem_texts 
     current_problem = problem_texts[problem_index]
     current_problem_text = current_problem["text"] # because zero indexed!!!!
-    # TODO: some problems have markdown errors? Uncomment line below to check study 
-    # current_problem_text = r"Let $\left({R, +, \odot}\right)$ be a ringoid such that $\left({R, \odot}\right)$ is a commutative semigroup. Let $n \in \mathcal{Z}: n \geq 2$. Then:"
 
-    # Set up the saving path for user data
-    # print(saving_path, uid, f"problem_set_index_{problem_index}", model)
     model_saving_path = os.path.join(
         saving_path, model
     )
@@ -129,17 +116,7 @@ def pipeline_for_model(
             # "AI: As a mathematical chatbot, my goal is to provide a clear and rigorous proof step by step.",
         ]
         with gr.Row(): 
-            # problem_html_txt = gr.HTML(
-            # '<p style="text-align:center">As a reminder, the problem is: ' + current_problem_text + ' </p>'                )
 
-            # problem_html_txt = gr.Markdown(
-            # '<p>As a reminder, the problem is: </p><p>' + current_problem_text + '</p>')
-
-            # problem_html_txt = gr.Markdown(
-            # 'As a reminder, the problem is: ' + current_problem_text)
-            # print(problem_index, current_problem_text)
-            # problem_html_txt = gr.Markdown(
-            # 'As a reminder, the problem is: <br></br>' + current_problem_text + '<br></br>Note, the problem is NOT automatically provided to the model. You will need to provide it, or part of the problem, as desired.')
             problem_html_txt = gr.HTML(
             'As a reminder, the problem is: <p></p>' + '<div style="background-color: white;">'+current_problem_text.replace('<p>', '<p style="color:black;">')+'</div>' + '<p></p>Note, the problem is NOT automatically provided to the model. You will need to provide it, or part of the problem, as desired. You can copy and paste from the problem above. You can optionally render your text in markdown before entering by pressing the --> button (note: the set of LaTeX symbols is restricted). <p></p>After many interactions, you may also need to SCROLL to see new model generations.')
 
@@ -149,7 +126,7 @@ def pipeline_for_model(
 
         with gr.Row().style(equal_height=True):
             txt = gr.Textbox(
-                value="",#current_problem_text,
+                value="",
                 show_label=False,
                 placeholder="Enter text and press the Interact button",
                 lines=5,
@@ -211,9 +188,6 @@ def pipeline_for_model(
                     raise AssertionError
 
 
-            # print("len of returned boxes! ", len(returned_boxes))
-            # assert len(returned_boxes) % 3 == 0
-            # conversation_length = int(len(returned_boxes) / 3)
             assert len(returned_boxes) % 4 == 0
             conversation_length = int(len(returned_boxes) / 4)
 
@@ -257,7 +231,7 @@ def pipeline_for_model(
             textbox_dict[f"ai_content_{i}"] = ai_content
             textbox_dict[f"ai_rating_{i}"] = ai_rating
             textbox_dict[f"ai_corr_rating_{i}"] = ai_corr_rating
-            textboxes.extend([user_content, ai_content, ai_rating, ai_corr_rating])#, ai_corr_rating])
+            textboxes.extend([user_content, ai_content, ai_rating, ai_corr_rating])
 
         # Finish rating boxes
         finish_rating_button = gr.Button("Finish rating", visible=False)
@@ -286,7 +260,6 @@ def pipeline_for_model(
         ):
             # save out time taken over course of conversation
             global start_time
-            # time_taken = time.process_time() - start_time
             time_taken = time.time() - start_time
             print("time taken: ", time_taken,  time.time(), start_time)
             
@@ -318,16 +291,6 @@ def pipeline_for_model(
                     time_taken],
                 open(os.path.join(model_saving_path, unique_key, "conversation_rating.json"), "w")
             )
-            # return [
-            #     gr.Textbox.update(visible=False),
-            #     gr.Textbox.update(visible=False),
-            #     gr.Radio.update(visible=False), 
-            #     gr.Radio.update(visible=False), 
-            #     # TODO: add new rating here 
-            # ] * MAX_CONVERSATION_LENGTH + [
-            #     gr.Button.update(visible=False),
-            #     gr.Button.update(visible=True),
-            # ]
 
             return [gr.update(visible=False),
                 gr.update(visible=True),
@@ -366,19 +329,6 @@ def pipeline_for_model(
         textboxes.append(termination_button)
 
 
-        # TODO: check on data saving here -- katie can update to handle arbitrary num intervention steps?
-        # gradio funcs only take gradio objects as input 
-        # finish_rating_button.click(
-        #     finish_rating, 
-        #     [
-        #         textbox_dict["user_content_0"], textbox_dict["ai_content_0"], textbox_dict["ai_rating_0"], textbox_dict["ai_corr_rating_0"],
-        #         textbox_dict["user_content_1"], textbox_dict["ai_content_1"], textbox_dict["ai_rating_1"], textbox_dict["ai_corr_rating_1"],
-        #         textbox_dict["user_content_2"], textbox_dict["ai_content_2"], textbox_dict["ai_rating_2"], textbox_dict["ai_corr_rating_2"],
-        #         textbox_dict["user_content_3"], textbox_dict["ai_content_3"], textbox_dict["ai_rating_3"], textbox_dict["ai_corr_rating_3"],
-        #         textbox_dict["user_content_4"], textbox_dict["ai_content_4"], textbox_dict["ai_rating_4"], textbox_dict["ai_corr_rating_4"],
-        #     ],
-        #     textboxes
-        # )
         finish_rating_button.click(
             finish_rating, 
             [
@@ -433,9 +383,6 @@ def pipeline_for_model(
 
         def next_page(solo_solve_ease):
 
-            # with open(): 
-            #     json.dump({"solo_solve": solo_solve_ease})
-
             truly_unique_path = os.path.join(model_saving_path, unique_key)
             if not os.path.exists(truly_unique_path):
                 os.makedirs(truly_unique_path)
@@ -477,7 +424,6 @@ def pipeline_for_model(
 
         def next_page():
             global start_time
-            # start_time = time.process_time()
             start_time = time.time()
             print("start time: ", start_time)
             return {
@@ -526,7 +472,6 @@ def a_single_problem(problem_statement, model_order, display_info=False, is_visi
             
             with gr.Column(visible=False) as final_rating:
                 with gr.Row():
-                    # instruction_alert = gr.Button("Help")
                     rank_choices = ["1 (Most preferrable math assistant)", "2","3 (Least preferrable math assistant)"]
                     model_1_rank = gr.Dropdown(choices=rank_choices,interactive=True)
                     model_2_rank = gr.Dropdown(choices=rank_choices,interactive=True)
@@ -552,8 +497,6 @@ def a_single_problem(problem_statement, model_order, display_info=False, is_visi
                                        "<p></p>Only continue once you have pressed Done Interaction with ALL 3 models, <strong>otherwise there will be an error.</strong>")
 
             start_button = gr.Button("Start comparing different models")
-            # data_dir_text = gr.Textbox(saving_dir, visible=False)
-            
 
             def compare_models():
                 model_content = []
@@ -595,19 +538,11 @@ def a_single_problem(problem_statement, model_order, display_info=False, is_visi
 
     return single_problem_block
 
-
-# problems_per_topic = {"Algebra": ["algebra_problems"], 
-#                       "Topology": ["top problems"], 
-#                       "Linear Algebra": ["lin alg problems"],
-#                       "Probability Theory": ["prob theory problems"]}
-
-
-
 next_button = gr.Button("Go to the next batch of problems", visible=False)
 with gr.Blocks(css="#warning {max-width: 2.5em;}") as demo:
     global mth_bkgrd, ai_play_bkgrd
 
-    mth_bkgrd="" # TODO: set on radio button click
+    mth_bkgrd=""
     ai_play_bkgrd = ""
 
     problem_set_index = 0
@@ -653,8 +588,6 @@ with gr.Blocks(css="#warning {max-width: 2.5em;}") as demo:
             visible=False
         )
 
-        # topic_selections = gr.Radio(choices=sorted(problems_per_topic.keys()), visible=False)
-
         topic_selections = gr.Radio(choices=problem_topics, visible=False,
                     label="What category of maths problems would you like to evaluate?", interactive=True,)
         warning_message = gr.HTML('<p style="color:red">Please answer these questions before continuing</p>', visible=False)
@@ -667,7 +600,7 @@ with gr.Blocks(css="#warning {max-width: 2.5em;}") as demo:
             global unique_key
             unique_key = str(uuid.uuid4())
             
-            save_survey_info(maths_bkgrd_experience, ai_interact_experience, topic_selections)#maths_bkgrd_experience, ai_interact_experience)
+            save_survey_info(maths_bkgrd_experience, ai_interact_experience, topic_selections)
             
             global poss_problems
             print("choice: ", topic_selections)
@@ -688,12 +621,8 @@ with gr.Blocks(css="#warning {max-width: 2.5em;}") as demo:
                 gr.update(visible=True) if i == poss_problems[0] else gr.update(visible=False) for i in range(num_problems_show)
             ]
             final_output = [gr.update(visible=False) for _ in range(6)] + updated_boxes
-            # print(final_output, len(final_output))
             return final_output
         
-        # print("Boxes length:", len(boxes))
-        # print("output length: ", len([experience_rating_html, experience_page_btn_c, topic_selections, maths_bkgrd_experience, ai_interact_experience] + boxes))
-
         experience_page_btn_c.click(
             next_page,
             [maths_bkgrd_experience, ai_interact_experience, topic_selections],
@@ -704,9 +633,7 @@ with gr.Blocks(css="#warning {max-width: 2.5em;}") as demo:
     global instruct_idx
     with gr.Column() as instruct_pgs: 
         instruct_idx = 0
-        # global instruct_idx
         instruction_html = gr.HTML(instruction_pages[instruct_idx])
-        # counter = gr.HTM("instruct_idx")
         instruction_btn_c = gr.Button("Continue")
 
         instruction_map = {idx: gr.HTML(instruction_page, visible=False) for idx, instruction_page in enumerate(instruction_pages)}
@@ -714,8 +641,7 @@ with gr.Blocks(css="#warning {max-width: 2.5em;}") as demo:
         def update_instruction(): 
             global instruct_idx
             instruct_idx += 1
-            if instruct_idx < len(instruction_pages): 
-                # instruction_html.update(value=instruction_pages[instruct_idx])
+            if instruct_idx < len(instruction_pages):
                 return {
                 experience_rating_html: gr.update(visible=False), 
                     experience_page_btn_c: gr.update(visible=False),
@@ -743,12 +669,6 @@ with gr.Blocks(css="#warning {max-width: 2.5em;}") as demo:
             [experience_rating_html, experience_page_btn_c, maths_bkgrd_experience, ai_interact_experience, instruction_html, instruction_btn_c, topic_selections]   
         )
 
-    # topic_selections.change(filter, topic_selections)
-    # todo: filter from the poss problems w/ problem index
-
-    # all_problem_set_ids = sorted(list(problem_sets.keys()))
-    
-
     next_button.render()
 
     # Last page
@@ -758,7 +678,6 @@ with gr.Blocks(css="#warning {max-width: 2.5em;}") as demo:
         global problem_set_index
 
         # save out preferences for the current problem
-        # TODO: Albert any help? thank you!
         json.dump(
                 {"prefence_data": []}, # convert b/c of weird numpy saving
                  open(os.path.join(unique_saving_path, unique_key, f"final_preferences_{problem_set_index}.json"), "w")
@@ -782,8 +701,5 @@ with gr.Blocks(css="#warning {max-width: 2.5em;}") as demo:
         return [gr.update(visible=False), gr.update(visible=False, value=value)] + updated_boxes
     next_button.click(click, inputs=[], outputs=[finish_page, next_button] + boxes)
 
-# TBD on queue! 
 demo.queue()
-
 demo.launch(share=True)
-# demo.launch()

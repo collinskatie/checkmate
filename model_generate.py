@@ -7,7 +7,6 @@ oai_key = "" # ADD YOUR KEY
 openai.api_key = oai_key
 
 
-# TODO: Make generation more complete
 def generate(model, prompt):
     assert model in model_options
     if model == "codegpt" or model == "textgpt" or model == "instructgpt":
@@ -69,7 +68,6 @@ def legacy_chatbot_generate(user_input, history=[]):
     history.append(f"AI: {response.strip()}")
     conversations = [(history[i], history[i+1]) for i in range(0, len(history)-1, 2)]
 
-    # print("history length: ", len(history))
     # Whether the textbox and the submit button should be hidden
     if len(history) >= 2*MAX_CONVERSATION_LENGTH:
         return conversations, history, gr.update(visible=False), gr.update(visible=False)
@@ -151,7 +149,6 @@ def chatbot_generate(user_newest_input, history, model):
             raise NotImplementedError
     
     # Get the generation from OpenAI
-    # print(chat_messages)
     if actual_model in ["gpt-3.5-turbo", "gpt-4"]:
         ai_newest_output = query_a_chat_completion(actual_model, chat_messages)
     elif actual_model == "text-davinci-003":
