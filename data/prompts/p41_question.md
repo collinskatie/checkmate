@@ -1,0 +1,1 @@
+The unit ball $\mathbb{D}^3 \subset \mathbb{R}^3$ is equidecomposable to the union of two unit balls.

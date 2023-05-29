@@ -1,0 +1,1 @@
+$\forall m, n \in \mathbb{Z}_{>0}: m > 1 \to n < m^n$

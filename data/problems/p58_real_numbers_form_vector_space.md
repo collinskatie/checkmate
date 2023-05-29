@@ -1,0 +1,1 @@
+Show that the set of real numbers $\mathbb{R}$, with the operations of addition and multiplication, forms a vector space.

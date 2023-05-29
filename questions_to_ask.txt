@@ -1,0 +1,10 @@
+Below are some questions that we intend to ask in the data. 
+
+- How do ratings change over the course of the interaction? For instance, does mathematical correctness decrease (or increase) over the interactions? Are only the first steps deemed helpful? 
+- How many steps does a participant typically spend interacting? When do they stop? 
+- What kinds of interaction queries are people making? E.g., queries for definitions? Querying to solve the entire problem outright?
+- How does level of experience change the magnitude of ratings, and type of queries made during interactions? 
+- Is GPT-4 consistently preferred, or is there some preference for ChatGPT and/or GPT-3.5? 
+- Do helpfulness and mathematical correctness seem predictive of the later preference ratings? 
+- Do the ratings of helpfulness and correctness track together? Or are there clear discrepancies (sometimes very helpful, but incorrect; or vice versa)? 
+- Does confidence in solving the problem prior to interacting with the AI system change the type of interactions and/or ratings?
