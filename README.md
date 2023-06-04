@@ -26,10 +26,12 @@ The data we have already collected, as part of MathConverse, is posted in ``data
 * interaction_set_idx: order of the set of three interactions that the participant was undertaking (zero-indexed; e.g., if this is 1, then this is the second round of three model ratings the participant is providing). 
 * final_prefs: user-provided preferences over the models. MISSING if incomplete or not provided. 
 
-We will provide a further processing script shortly. 
+We will provide a further processing script shortly. ``questions_to_ask.txt`` are a set of pre-registered questions that we wanted to ask of the data. Questions were written prior to any data collection; these were last updated on April 6, 2023.
 
 If you have any questions, please do not hesitate to add as an Issue to our repo, or reach out to kmc61@cam.ac.uk and/or qj213@cam.ac.uk. 
 
 If you use our code and/or data, please consider citing us at: 
 
-[add citation]
+``
+
+``
