@@ -1,4 +1,4 @@
-# CheckMate: An Adaptable Platform for Interactive Comparative Evaluation of LLMs 
+# CheckMate: A Prototype Adaptable Platform for Interactive Comparative Evaluation of LLMs 
 
 We include code for our protoype interactive LLM evaluation platform, CheckMate, as introduced in our [working paper](). 
 
