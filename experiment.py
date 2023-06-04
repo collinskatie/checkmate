@@ -10,11 +10,15 @@ import matplotlib.pyplot as plt
 from model_generate import chatbot_generate
 from constants import usefulness_options, experience_options, ai_experience_options, instruction_pages, correctness_options, \
     useful_prompt_txt, correctness_prompt_txt, model_options, solo_solve_options, first_rating_instruct_txt
-from constants import MAX_CONVERSATION_LENGTH, num_problems_show
+from constants import MAX_CONVERSATION_LENGTH 
 from data.data_utils.load_problems import load_problems
 from data.data_utils.load_prompts import get_prompt_examples
 
-
+'''
+Note: the problem topic selection is specific to our maths setting.
+We pre-set each topic to follow the integer code below.
+Change for your own tasks!
+'''
 problem_topics = ["Algebra", "Group Theory", "Number Theory", "Probability Theory", "Topology", "Linear Algebra"]
 problems_per_topic = {"Algebra": np.arange(10),
                       "Group Theory": np.arange(10, 20), 
@@ -23,9 +27,6 @@ problems_per_topic = {"Algebra": np.arange(10),
                       "Topology": np.arange(40, 50),
                       "Linear Algebra": np.arange(50, 60),}
 
-# assert set(problem_topics) == set(problems_per_topic.keys()), "Topics and problems per topic don't match"
-
-
 # subset the problems into *sets* of problems -- that way, diff problems to diff models 
 problem_sets = {}
 problem_sets_per_topic = {topic: [] for topic in problems_per_topic}
@@ -33,9 +34,8 @@ n_per_set = 3
 current_set_id = 0
 for topic, problem_indices in problems_per_topic.items(): 
     random.shuffle(problem_indices)
-    print("TOPIC: ", len(problem_indices))
-    subsets = np.split(problem_indices[:-1], 3) # b/c 10 problems, discard last
-    print("TOPIC: ", topic, " subsets: ", subsets, "orig: ", np.split(problem_indices[:-1], 3))
+    # note b/c we gathered 10 problems, discard last
+    subsets = np.split(problem_indices[:-1], 3) 
     for i, subset in enumerate(subsets): 
         problem_sets[current_set_id] = subset 
         problem_sets_per_topic[topic].append(current_set_id)
@@ -45,31 +45,13 @@ num_problems_show = len(problem_sets.keys())
 print("NUM BLOCKS OF PROBLEMS: ", num_problems_show)
 
 problem_texts = load_problems("./data/problems_html/")
-debug_problem_id = 10 #np.random.choice(list(range(len(problem_texts))))
-debug_problem = problem_texts[debug_problem_id]
-current_problem_text = debug_problem["text"]
-assert len(problem_texts) == 60, len(problem_texts)
-
 prompts = get_prompt_examples("./data/prompts/")
-assert len(prompts) == 24, len(prompts)
-
-debug_solution = r"$\pi$\'s value is roughtly $\frac{22}{7}$"
-
-debug_model = "debug_model"
 
 poss_problems = []
 
-cwd = os.getcwd()
-print("WD: ", cwd)
-if "collins" in cwd: 
-    main_saving_path = f"/Users/kcollins/new_save"
-    current_uid = f"kmc{np.random.rand()}"
-elif "qj213" in cwd: 
-    main_saving_path = "/home/qj213/new_save"
-    current_uid = "aqj213"
-else: 
-    main_saving_path = "new_save"
-    current_uid = f"user{np.random.rand()}"
+main_saving_path = f"./saved_data/"
+if not os.path.exists(main_saving_path): os.makedirs(main_saving_path)
+current_uid = f"user{np.random.rand()}"
 
 # Set random seed with uid and shuffle the model order
 random.seed(current_uid)
@@ -78,11 +60,9 @@ random.shuffle(model_order)
 
 if not os.path.exists(main_saving_path): os.makedirs(main_saving_path)
 
-debug_problem_index = 0
-
 
 def pipeline_for_model(
-    model: str = debug_model,
+    model: str = "gpt-4",
     saving_path: str = main_saving_path,
     problem_index: int = 0,
     display_info: bool = False,

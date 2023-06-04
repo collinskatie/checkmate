@@ -1,6 +1,7 @@
-num_problems_show = 10 
-num_models_show = 3
-num_interactions = 20 
+MAX_CONVERSATION_LENGTH = 20
+MAX_TOKENS_PER_GENERATION = 512
+SAMPLING_TEMPERATURE = 0.
+
 
 plaintxt_instructions = [
     ["Welcome to our study!", "In this task, you will be interacting with AI systems to explore how well AI systems can assist in solving mathematical problems.", 
@@ -15,7 +16,7 @@ plaintxt_instructions = [
     
 first_rating_instructions = [
 
-"You have at most " + str(num_interactions) + " interactions to play with the model and explore its ability to <i>help you solve the problem</i>. You do not need to use all interactions.",
+"You have at most " + str(MAX_CONVERSATION_LENGTH) + " interactions to play with the model and explore its ability to <i>help you solve the problem</i>. You do not need to use all interactions.",
  "After the interactions, you will rate <strong>for each step</strong>: 1) how <stong>helpful</strong> you found the response for helping you solve the problem, or if you already know how to solve the problem, imagine that you are an <strong>undergraduate student who does not immediately know how to solve the problem</strong>; and 2) how <strong>mathematically correct</strong> the response was.",
  "You can type in Markdown or LaTeX."
 
@@ -74,25 +75,9 @@ solo_solve_options = [
     "(6) Definitely can solve on my own"
     ]
 
-error_options = [
-    "Syntax error",
-    "Improper algebraic manipulation",
-    "Wrong inequality direction"
-]
-
-yes_no_options = [
-    "Yes",
-    "No"
-]
-
 model_options = [
     "chatgpt",
     "instructgpt",
     "chatgpt4"
 ]
 
-
-MAX_CONVERSATION_LENGTH = 20
-MAX_TOKENS_PER_GENERATION = 512
-
-SAMPLING_TEMPERATURE = 0.
