@@ -4,7 +4,7 @@ We include code for our protoype interactive LLM evaluation platform, CheckMate,
 
 Note: this codebase is a *work-in-progress*. The code will be cleaned and further commented shortly. Along with notes on how to start a server. 
 
-<img width="500" alt="interface1" src="https://github.com/collinskatie/checkmate/assets/37914552/cea11fe6-f65a-4056-a104-80c252de3850">
+![Image](interface1.png)
 
 At present, the CheckMate code is seeded with the interface to run our mathematics evaluation. To start the code, you should provide your own API key in ``model_generate.py``. You can launch the survey by running: ``gradio experiment.py`` assuming that you have installed [gradio](https://gradio.app/).
 
