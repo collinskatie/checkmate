@@ -14,7 +14,7 @@ The data we have already collected, as part of MathConverse, is posted in ``data
 * model_responses: the model's response associated with each query. 
 * correctness_ratings: participants' ratings of mathematical correctness for each model response.
 * helpfulness_ratings: participants' ratings of perceived helpfulness for each model response.
-* solo_solve: the participants' self-declared confidence in their ability to solve the problem on their own in advance. MISSING if the participant did not provide.\
+* solo_solve: the participants' self-declared confidence in their ability to solve the problem on their own in advance. MISSING if the participant did not provide.
 * problem_name: name of the problem interacting with (see data/ for all problems). 
 * selected_topic: topic the participant selected to interact with. 
 * uid: a unique, randomly generated id to associate with that participant's round of interactions.
