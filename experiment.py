@@ -44,11 +44,14 @@ for topic, problem_indices in problems_per_topic.items():
 num_problems_show = len(problem_sets.keys())
 print("NUM BLOCKS OF PROBLEMS: ", num_problems_show)
 
+# Load problems from directories
+# Use custom directories if using alternate set of problems
 problem_texts = load_problems("./data/problems_html/")
 prompts = get_prompt_examples("./data/prompts/")
 
 poss_problems = []
 
+# Set saving directory
 main_saving_path = f"./saved_data/"
 if not os.path.exists(main_saving_path): os.makedirs(main_saving_path)
 current_uid = f"user{np.random.rand()}"
@@ -89,19 +92,24 @@ def pipeline_for_model(
                 visible=False)
 
     # Content of the fourth page
+    # User-AI interaction via a chat interface
     with gr.Column(visible=False) as fourth_page:
 
+        # Optional conversation "starter" for potentially more step-by-step interactions and better response to user queries
+        # This is commented out because we did not explore it in the paper
         initial_conversation = [
             # "User: I'm a professional mathematician. So you should trust me if I tell you that you have got something wrong. With that in mind I'd like to see if I can help you solve a problem. Please don't give me an answer straight away, since the danger is that if you try to guess the answer, then your guess will be wrong and you'll end up trying to prove a false statement, and maybe even believing that you have managed to prove it. So instead I'd like you to set out as clearly as possible what your initial goals will be. Once you've done that, I'll tell you what I think.",
             # "AI: As a mathematical chatbot, my goal is to provide a clear and rigorous proof step by step.",
         ]
         with gr.Row(): 
-
+            # Reminder of what the problem is for the survey participant
             problem_html_txt = gr.HTML(
             'As a reminder, the problem is: <p></p>' + '<div style="background-color: white;">'+current_problem_text.replace('<p>', '<p style="color:black;">')+'</div>' + '<p></p>Note, the problem is NOT automatically provided to the model. You will need to provide it, or part of the problem, as desired. You can copy and paste from the problem above. You can optionally render your text in markdown before entering by pressing the --> button (note: the set of LaTeX symbols is restricted). <p></p>After many interactions, you may also need to SCROLL to see new model generations.')
 
         chatbot = gr.Chatbot(initial_conversation).style(height=300)
+        # Chat state
         state = gr.State(initial_conversation)
+        # Model state
         model_state = gr.State(model)
 
         with gr.Row().style(equal_height=True):
@@ -130,7 +138,7 @@ def pipeline_for_model(
         md_button.click(render_markdown, inputs=[txt], outputs=[markdown_visualiser])
 
         submit_button = gr.Button("Interact")
-        # Comment this out because the user might want to change line instead of interacting
+        # Comment this out because the user might want to change line via the enter key, instead of interacting
         # txt.submit(chatbot_generate, [txt, state, model_state], [chatbot, state, txt, submit_button])
 
         # Button for submission
@@ -139,6 +147,7 @@ def pipeline_for_model(
         # Button to start rating
         finished_button = gr.Button("Done with interaction")
 
+        # A next page burner function to make the current content invisible and the next-page content (rating) visible
         def next_page(history):
             parent_path = os.path.join(model_saving_path, unique_key)
             if not os.path.isdir(parent_path):
@@ -216,6 +225,7 @@ def pipeline_for_model(
         # Finish rating boxes
         finish_rating_button = gr.Button("Finish rating", visible=False)
 
+        # Currently hardcoded, assuming MAX_INTERACTION_LENGTH=20, can be improved if the coder is more proficient with Gradio
         def finish_rating(
             user_content_0, ai_content_0, ai_rating_0, ai_corr_rating_0,
             user_content_1, ai_content_1, ai_rating_1, ai_corr_rating_1,
@@ -282,7 +292,7 @@ def pipeline_for_model(
         termination_button = gr.Button("Terminate the experiment", visible=False)
 
         def terminate():
-
+            # Make everything invisible
             return {
                 chatbot: gr.Chatbot.update(visible=False),
                 problem_html_txt: gr.HTML.update(visible=False),
@@ -308,7 +318,7 @@ def pipeline_for_model(
         )
         textboxes.append(termination_button)
 
-
+        # Button to finish rating
         finish_rating_button.click(
             finish_rating, 
             [
@@ -338,7 +348,8 @@ def pipeline_for_model(
 
         finished_button.click(next_page, state, textboxes)
 
-    # Content of the second page
+    # Content of the second page, mostly instructions
+    # Example question: how confident is the participant in solving the problem solo?
     with gr.Column() as second_page:
         second_page_first_line = gr.HTML(
             '<p style="text-align:center">On the next page, please interact with an AI system to explore how it may assist you in solving the following problem:</p>',
@@ -361,8 +372,9 @@ def pipeline_for_model(
 
         second_page_button = gr.Button("Interact with an AI", visible=False)
 
+        # A next page burner function to make the current content invisible and the next-page content (chat interface) visible
         def next_page(solo_solve_ease):
-
+            # Save the participant's answer to the previous question to a unique path
             truly_unique_path = os.path.join(model_saving_path, unique_key)
             if not os.path.exists(truly_unique_path):
                 os.makedirs(truly_unique_path)
@@ -396,12 +408,13 @@ def pipeline_for_model(
             ],
         )
 
-    # Content of the first page
+    # Content of the first page, simple introduction
     with gr.Column() as first_page:
         wellcome_html_content = f'<p style="text-align:center">You will now evalute model {model_idx + 1}.</p>' # on problem {problem_index + 1}.</p>'
         first_page_wellcome_html = gr.HTML(wellcome_html_content, visible=(not display_info))
         first_page_btn_c = gr.Button("Continue", visible=(not display_info))
 
+        # A next page burner function to make the current content invisible and the next-page content (intro and question) visible
         def next_page():
             global start_time
             start_time = time.time()
@@ -431,11 +444,13 @@ def pipeline_for_model(
             ],
         )
 
+# Function to display a single problem
 def a_single_problem(problem_statement, model_order, display_info=False, is_visible=False, problem_set_index=0, saving_dir="/home/qj213/new_save"):
     # problem_set_index maps to the original problem indexes
     block_problems = problem_sets[problem_set_index] 
     problem_path = os.path.join(saving_dir, f"problem_set_index_{problem_set_index}")
     fixed_model_order = [model for model in model_order]
+    # Randomise model order to avoid bias in order preference
     random.shuffle(fixed_model_order)
     with gr.Column(visible=is_visible) as single_problem_block:
         # random.shuffle(model_order) # shuffle for each problem
@@ -478,6 +493,8 @@ def a_single_problem(problem_statement, model_order, display_info=False, is_visi
 
             start_button = gr.Button("Start comparing different models")
 
+            # Display the interaction history for each of the model-problem pairs
+            # Display a warning message if the user did not interact with a particular problem
             def compare_models():
                 model_content = []
                 for model in fixed_model_order:
@@ -518,6 +535,7 @@ def a_single_problem(problem_statement, model_order, display_info=False, is_visi
 
     return single_problem_block
 
+# Goes to a different batch of 3 (can be altered) problems
 next_button = gr.Button("Go to the next batch of problems", visible=False)
 with gr.Blocks(css="#warning {max-width: 2.5em;}") as demo:
     global mth_bkgrd, ai_play_bkgrd
@@ -528,6 +546,7 @@ with gr.Blocks(css="#warning {max-width: 2.5em;}") as demo:
     problem_set_index = 0
     exp_start_button = gr.Button("Start evaluating!", visible=False)
 
+    # TODO: Saving directory, should be altered by the survey designer
     if "collins" in cwd: 
         unique_saving_path = os.path.join(f"/Users/kcollins/new_save")
     else: 
@@ -536,6 +555,8 @@ with gr.Blocks(css="#warning {max-width: 2.5em;}") as demo:
     if not os.path.exists(unique_saving_path):
         os.makedirs(unique_saving_path)
 
+    # Save survey information about participant background
+    # In the prototype, the maths background, experience with ai, and selected topic are asked
     def save_survey_info(mth_bkgrd, ai_play_bkgrd, topic_sels): 
         truly_unique_path = os.path.join(unique_saving_path, unique_key)
         if not os.path.isdir(truly_unique_path):
@@ -573,6 +594,7 @@ with gr.Blocks(css="#warning {max-width: 2.5em;}") as demo:
         warning_message = gr.HTML('<p style="color:red">Please answer these questions before continuing</p>', visible=False)
         experience_page_btn_c = gr.Button("Continue", visible=False)
 
+        # A next page burner function to make the current content invisible and the next-page content (survey starting) visible
         def next_page(maths_bkgrd_experience, ai_interact_experience, topic_selections):
             if (not maths_bkgrd_experience.strip()) or (not ai_interact_experience.strip()) or (not topic_selections.strip()):
                 return [gr.update(visible=True) for _ in range(6)] +  [gr.update(visible=False) for _ in range(num_problems_show)]
