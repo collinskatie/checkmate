@@ -6,8 +6,6 @@ Note: this codebase is a *work-in-progress*. The code will be cleaned and furthe
 
 ![Image](interface1.png)
 
-At present, the CheckMate code is seeded with the interface to run our mathematics evaluation. To start the code, you should provide your own API key in ``model_generate.py``. You can launch the survey by running: ``gradio experiment.py`` assuming that you have installed [gradio](https://gradio.app/).
-
 We include an overview of how to adapt the platform for your own tasks in the User Guide of our [working paper](https://arxiv.org/abs/2306.01694).
 
 The data we have already collected, as part of MathConverse, is posted in ``data/mathconverse_parsed_interactions.csv``. Columns are as follows: 
@@ -29,6 +27,9 @@ The data we have already collected, as part of MathConverse, is posted in ``data
 NEW!!! We have also uploaded an annotated taxonomy of user queries at ``data/annotated_taxonomy.csv``
 
 We will provide a further processing script shortly. ``questions_to_ask.txt`` are a set of pre-registered questions that we wanted to ask of the data. Questions were written prior to any data collection; these were last updated on April 6, 2023.
+
+## Launching the server
+At present, the CheckMate code is seeded with the interface to run our mathematics evaluation. To start the code, you should provide your own API key in ``model_generate.py``. You can launch the survey by running: ``gradio experiment.py`` assuming that you have installed [gradio](https://gradio.app/). We used gradio version 3.19.0 but later versions should also work.
 
 If you have any questions, please do not hesitate to add as an Issue to our repo, or reach out to kmc61@cam.ac.uk and/or qj213@cam.ac.uk. 
 
