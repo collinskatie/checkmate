@@ -2,7 +2,7 @@
 
 We include code for our protoype interactive LLM evaluation platform, CheckMate, as introduced in our [working paper](https://arxiv.org/abs/2306.01694). 
 
-Note: this codebase is a *work-in-progress*. The code will be cleaned and further commented shortly. Along with notes on how to start a server. 
+If you have any questions or challenges, please feel free to post a GitHub Issue! 
 
 ![Image](interface1.png)
 
