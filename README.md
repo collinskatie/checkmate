@@ -37,16 +37,16 @@ If you have any questions, please do not hesitate to add as an Issue to our repo
 ## Citation
 If you use our code and/or data, please consider citing us at: 
 ```
-@misc{collinsJiang2023interactiveMathEval,
-      title={Evaluating Language Models for Mathematics through Interactions}, 
-      author={Katherine M. Collins and Albert Q. Jiang and Simon Frieder and Lionel Wong and Miri Zilka and Umang Bhatt and Thomas Lukasiewicz and Yuhuai Wu and Joshua B. Tenenbaum and William Hart and Timothy Gowers and Wenda Li and Adrian Weller and Mateja Jamnik},
-      year={2023},
-      eprint={2306.01694},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
-}
+@article{collinsJiang2023interactiveMathEval,
+author = {Katherine M. Collins  and Albert Q. Jiang  and Simon Frieder  and Lionel Wong  and Miri Zilka  and Umang Bhatt  and Thomas Lukasiewicz  and Yuhuai Wu  and Joshua B. Tenenbaum  and William Hart  and Timothy Gowers  and Wenda Li  and Adrian Weller  and Mateja Jamnik },
+title = {Evaluating language models for mathematics through interactions},
+journal = {Proceedings of the National Academy of Sciences},
+volume = {121},
+number = {24},
+pages = {e2318124121},
+year = {2024},
+doi = {10.1073/pnas.2318124121},
+URL = {https://www.pnas.org/doi/abs/10.1073/pnas.2318124121},
+eprint = {https://www.pnas.org/doi/pdf/10.1073/pnas.2318124121},
+abstract = {There is much excitement about the opportunity to harness the power of large language models (LLMs) when building problem-solving assistants. However, the standard methodology of evaluating LLMs relies on static pairs of inputs and outputs; this is insufficient for making an informed decision about which LLMs are best to use in an interactive setting, and how that varies by setting. Static assessment therefore limits how we understand language model capabilities. We introduce CheckMate, an adaptable prototype platform for humans to interact with and evaluate LLMs. We conduct a study with CheckMate to evaluate three language models (InstructGPT, ChatGPT, and GPT-4) as assistants in proving undergraduate-level mathematics, with a mixed cohort of participants from undergraduate students to professors of mathematics. We release the resulting interaction and rating dataset, MathConverse. By analyzing MathConverse, we derive a taxonomy of human query behaviors and uncover that despite a generally positive correlation, there are notable instances of divergence between correctness and perceived helpfulness in LLM generations, among other findings. Further, we garner a more granular understanding of GPT-4 mathematical problem-solving through a series of case studies, contributed by experienced mathematicians. We conclude with actionable takeaways for ML practitioners and mathematicians: models that communicate uncertainty, respond well to user corrections, and can provide a concise rationale for their recommendations, may constitute better assistants. Humans should inspect LLM output carefully given their current shortcomings and potential for surprising fallibility.}}
 ```
-
-``
-
-``
