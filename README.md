@@ -1,6 +1,6 @@
 # CheckMate: A Prototype Adaptable Platform for Interactive Comparative Evaluation of LLMs 
 
-We include code for our protoype interactive LLM evaluation platform, CheckMate, as introduced in our [working paper](https://arxiv.org/abs/2306.01694). 
+We include code for our protoype interactive LLM evaluation platform, CheckMate, as introduced in our [PNAS paper](https://www.pnas.org/doi/10.1073/pnas.2318124121). 
 
 If you have any questions or challenges, please feel free to post a GitHub Issue! 
 
