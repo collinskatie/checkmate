@@ -2,7 +2,7 @@
 
 We include code for our protoype interactive LLM evaluation platform, CheckMate, as introduced in our [PNAS paper](https://www.pnas.org/doi/10.1073/pnas.2318124121). 
 
-If you have any questions or challenges, please feel free to post a GitHub Issue! 
+If you have any questions or challenges, please feel free to post a GitHub Issue! [NOTE you may need Gradio version 3.24.0]
 
 ![Image](interface1.png)
 
